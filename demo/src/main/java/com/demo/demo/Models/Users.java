@@ -24,4 +24,7 @@ public class Users {
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id_user")
     ,inverseJoinColumns = @JoinColumn(name = "rol_id", referencedColumnName = "id_rol"))
     private List<Roles> roles = new ArrayList<>();
+    //Relación con datos personales
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Student userStudent;
 }

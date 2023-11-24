@@ -1,12 +1,15 @@
 package com.demo.demo.Service;
 
 import com.demo.demo.Dtos.PasswordUpdateDto;
+import com.demo.demo.Dtos.RegisterStundentDto;
+import com.demo.demo.Dtos.StudentDetailsDto;
 import com.demo.demo.Models.Roles;
+import com.demo.demo.Models.Student;
 import com.demo.demo.Models.Users;
 import com.demo.demo.Repositories.IRolesRepository;
+import com.demo.demo.Repositories.IStudentsRepository;
 import com.demo.demo.Repositories.IUsersRepository;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,14 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    
     @Autowired
     private IUsersRepository usersRepository;
+
+    @Autowired
+    private IStudentsRepository studentsRepository;
 
     @Autowired
     private IRolesRepository rolesRepository;
@@ -31,6 +35,45 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Transactional
+    public Student registerStudent(RegisterStundentDto registerDto,String rol) {
+        // Crear y configurar la entidad Students a partir de los detalles
+        Student student = new Student();
+        StudentDetailsDto studentDetails = registerDto.getDetails();
+        student.setIdDocument(studentDetails.getIdDocument());
+        student.setTypeDocument(studentDetails.getTypeDocument());
+        student.setCodeStudent(studentDetails.getCodeStudent());
+        student.setFirstName(studentDetails.getFirstName());
+        student.setMiddleName(studentDetails.getMiddleName());
+        student.setLastName(studentDetails.getLastName());
+        student.setSecondLastName(studentDetails.getSecondLastName());
+        student.setDegree(studentDetails.getDegree());
+        student.setLevelProgramming(studentDetails.getLevelProgramming());
+        student.setEmail(studentDetails.getEmail());
+        // Crear y configurar la entidad Users
+        Users user = new Users();
+        user.setUsername(student.getCodeStudent()); // Usar codeStudent como username
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        
+        // Asignar rol por defecto (ajustar según tu lógica de negocio)
+        Roles userRole = rolesRepository.findByName(rol)
+                .orElseGet(() -> {
+                    Roles newRole = new Roles();
+                    newRole.setName(rol);
+                    return rolesRepository.save(newRole);
+                });
+        user.setRoles(Collections.singletonList(userRole));
+
+        // Guardar el usuario
+        usersRepository.save(user);
+
+        // Vincular usuario con estudiante y guardar estudiante
+        student.setUser(user);
+        //user.setUserStudent(student);
+        return studentsRepository.save(student);
+    }
+
+    ///Crear user
     public Users createUser(String username, String password, String role) {
         Users user = new Users();
         user.setUsername(username);
@@ -74,9 +117,9 @@ public class UserService {
                 return true;
             }
         } catch (DataIntegrityViolationException e) {
-            logger.error("Error al eliminar el usuario con ID {}: {}", userId, e.getMessage());
+            
         } catch (Exception e) {
-            logger.error("Excepción inesperada al eliminar el usuario con ID {}: {}", userId, e.getMessage());
+            
         }
         return false;
     }
