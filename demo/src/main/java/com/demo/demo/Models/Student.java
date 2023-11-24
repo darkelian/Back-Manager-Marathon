@@ -20,19 +20,19 @@ import lombok.NoArgsConstructor;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_stundent")
+    @Column(name = "id_stundent", nullable = false)
     private Long idStudent;
-    @Column(name = "id_document")
+    @Column(name = "id_document", unique = true, nullable = false)
     private String idDocument;
     @Column(name = "type_document")
     private String typeDocument;
-    @Column(name = "code_student")
+    @Column(name = "code_student", unique = true, nullable = false)
     private String codeStudent;
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
     @Column(name = "middle_name")
     private String middleName;
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
     @Column(name = "second_last_name")
     private String SecondLastName;
@@ -40,7 +40,7 @@ public class Student {
     private String degree;
     @Column(name = "level_programming")
     private String levelProgramming;
-    @Column(name = "email")
+    @Column(name = "email",unique = true, nullable = false)
     private String email;
 
     @OneToOne

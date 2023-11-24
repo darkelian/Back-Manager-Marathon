@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "default-user.username",
+    "type": "java.lang.String",
+    "description": "A description for 'default-user.username'"
+  },
+  {
+    "name": "default-user.password",
+    "type": "java.lang.String",
+    "description": "A description for 'default-user.password'"
+  },
+  {
+    "name": "default-user.rol",
+    "type": "java.lang.String",
+    "description": "A description for 'default-user.rol'"
+  },
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.secret'"
+  },
+  {
+    "name": "jwt.expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.expiration'"
+  }
+]}

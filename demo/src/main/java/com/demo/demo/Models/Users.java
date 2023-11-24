@@ -16,8 +16,9 @@ import java.util.List;
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_user")
+    @Column(name = "id_user",nullable = false)
     private Long idUsuario;
+    @Column(unique = true,nullable = false)
     private String username;
     private String password;
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })

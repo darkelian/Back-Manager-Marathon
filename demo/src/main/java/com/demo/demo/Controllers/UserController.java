@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.demo.Dtos.PasswordUpdateDto;
 import com.demo.demo.Dtos.RegisterStundentDto;
-import com.demo.demo.Dtos.StandardResponseDTO;
-import com.demo.demo.Models.Student;
 import com.demo.demo.Models.Users;
 import com.demo.demo.Service.UserService;
 
@@ -31,19 +29,14 @@ public class UserController {
     // Registrar un nuevo usuario con rol de USER
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterStundentDto registrationDto) {
-        try {
-            Student newStudent = userService.registerStudent(registrationDto,"USER");
-            // Puedes adaptar la respuesta según lo que desees retornar
-            return ResponseEntity.ok(newStudent);
-        } catch (Exception e) {
-            // Manejo de errores, por ejemplo, en caso de username duplicado
-            return ResponseEntity.badRequest().body(null);
-        }
+        userService.registerStudent(registrationDto, "USER");
+        return ResponseEntity.ok("Estudiante registrado");
     }
 
     // Actualizar contraseña
     @PutMapping("/update-password")
-    public ResponseEntity<String> updatePassword(@Valid @RequestParam String username, @RequestBody PasswordUpdateDto passwordUpdateDto) {
+    public ResponseEntity<String> updatePassword(@Valid @RequestParam String username,
+            @RequestBody PasswordUpdateDto passwordUpdateDto) {
         boolean isUpdated = userService.updatePassword(username, passwordUpdateDto);
         if (isUpdated) {
             return ResponseEntity.ok("Contraseña actualizada con éxito");
